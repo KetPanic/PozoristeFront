@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Header subtitle="Create account"/>
+    <Header subtitle="Registrujte se"/>
 
     <b-form @submit="onSubmit">
       <b-form-group label="Email address:" label-for="email">
@@ -14,6 +14,9 @@
       <b-form-group label="Password:" label-for="password">
         <b-form-input id="password" v-model="form.password" type="password" required></b-form-input>
       </b-form-group>
+        <b-form-group label="Repeat password:" label-for="repeatPassword">
+          <b-form-input id="repeatPassword" v-model="repeatPassword" type="password" required></b-form-input>
+        </b-form-group>
 
       <b-form-group label="Name:" label-for="name">
         <b-form-input id="name" v-model="form.name" placeholder="Enter name" required></b-form-input>
@@ -50,7 +53,8 @@
           name: '',
           surname: '',
           type: 2
-        }
+        },
+        repeatPassword: '',
       }
     },
 
@@ -61,7 +65,9 @@
 
       onSubmit(e) {
         e.preventDefault();
-        if(this.form.password.length < 4){
+          if(this.form.password != this.repeatPassword){
+            alert("Passwords don't match");
+          }else if(this.form.password.length < 4){
           alert("Password must be at least 4 characters long");
         }else{
           this.register(this.form).then(res => {

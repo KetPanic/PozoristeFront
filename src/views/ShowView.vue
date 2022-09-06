@@ -3,6 +3,10 @@
       <div v-if="gotData">
         <Header :subtitle="subtitle"/>
         <Show :rep="rep"></Show>
+        <hr/>
+        <Repertoire />
+        <hr>
+        <Comments :showId="rep.show.id"></Comments> 
       </div>
   
     </div>
@@ -12,6 +16,7 @@
     import Header from '@/components/Header.vue';
     import Comments from '@/components/Comments.vue';
     import Show from '@/components/Show.vue';
+    import Repertoire from '@/components/Repertoire.vue';
     import { mapActions, mapState } from 'vuex';
   
     export default {
@@ -20,7 +25,9 @@
       components: {
         Header,
         Comments,
-        Show
+        Show,
+        Comments,
+        Repertoire
       },
   
       computed: {
@@ -49,9 +56,9 @@
             this.rep = r;
             this.image = 'data:image/jpeg;base64,'+ r.show.image;
             this.subtitle = r.show.name;
+            this.fetchRepertoireIdsForShow(r.show.id);
             this.gotData = true;
           }); 
-  
       },
     },
   
@@ -62,6 +69,7 @@
             this.rep = r;
             this.image = 'data:image/jpeg;base64,'+ r.show.image;
             this.subtitle = r.show.name;
+            this.fetchRepertoireIdsForShow(r.show.id);
             this.gotData = true;
           });
       },
@@ -69,6 +77,7 @@
       methods: {
         ...mapActions([
           'getRepertoireEntry',
+          'fetchRepertoireIdsForShow'
         ]),
       }
     }

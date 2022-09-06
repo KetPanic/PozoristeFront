@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Header subtitle="Log In"/>
+    <Header subtitle="Prijavite se"/>
     <b-form @submit="onSubmit">
       <b-form-group label="User Name:" label-for="username">
         <b-form-input id="username" v-model="form.username" placeholder="Enter name" required></b-form-input>

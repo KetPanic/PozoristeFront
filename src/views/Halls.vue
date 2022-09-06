@@ -1,10 +1,13 @@
 <template>
-  <div class="home">
+  <div>
+    <Header subtitle="Sale"></Header>
+    <div class="home">
     <b-list-group>
     <div v-for="hall in halls">
       <Hall :hall="hall"/>
     </div>
   </b-list-group>
+    </div>
   </div>
 </template>
 
@@ -13,12 +16,14 @@
 
 import {mapActions, mapState} from 'vuex';
 import Hall from '@/components/Hall.vue';
+import Header from '@/components/Header.vue';
 
 export default {
   name: 'Halls',
   
     components: {
-      Hall
+      Hall,
+      Header
     },
 
 computed: {

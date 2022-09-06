@@ -1,21 +1,22 @@
 <template>
   <div>
-    <h4>User Comments</h4>
+    <h4>Komentari</h4>
 
     <div v-if="token">
       <b-form-input
         v-model="comment"
-        placeholder="Say something..."
+        placeholder="Napisite nesto..."
         @keydown.enter="onSubmit"
       ></b-form-input>
-
+    </div>
+    <p v-else>Morate biti prijavljeni da biste ostavili komentar</p>
       <b-card v-for="comment in show.comments" :title="comment.user.username" :key="comment.id">
         <b-card-text>
           {{ comment.text }}
         </b-card-text>
       </b-card>
-    </div>
-    <p v-else>You must be signed in to leave a comment</p>
+      <hr>
+      <br>
   </div>
 </template>
 
@@ -27,7 +28,7 @@
     name: 'Comments',
 
     props: {
-      id: Number
+      showId: Number
     },
 
     data() {
@@ -39,13 +40,14 @@
 
     computed: {
       ...mapState([
-        'token'
+        'token',
+        'id'
       ])
     },
 
     
     mounted() {
-        this.getShowEntry(this.id).then(r => this.show = r);
+        this.getShowEntry(this.showId).then(r => this.show = r);
     },
 
     methods: {
@@ -55,7 +57,7 @@
       ]),
 
       onSubmit() {
-        this.$socket.emit('comment', { text: this.comment, showId: this.show.id, userId: this.id });
+        this.$socket.emit('comment', { text: this.comment, showId: this.show.id, userId: this.id, token:this.token });
         this.comment = '';
       }
     }

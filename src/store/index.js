@@ -12,6 +12,8 @@ export default new Vuex.Store({
     shows: [],
     halls: [],
     id: -1,
+    user: {},
+    reservations: []
   },
   getters: {
   },
@@ -54,6 +56,16 @@ export default new Vuex.Store({
       if (image) {
         image.comments.push(obj.comment);
       }
+    },
+    addUser(state, obj){
+      state.user = obj;
+    },
+    addReservations(state, obj){
+      state.reservations = obj;
+    },
+
+    addMoreRepertoireIds(state, obj){
+      state.repertoireIds.push(obj);
     }
   },
   actions: {
@@ -88,6 +100,59 @@ export default new Vuex.Store({
             .then( res => {
               resolve(res);
             });
+      });
+    },
+
+    getUser({ commit, state }) {
+      return new Promise( (resolve, reject) => {
+          fetch(`http://127.0.0.1:8200/users/${localStorage.id}`, {
+            method: 'GET',
+            headers: { 'Authorization': `Bearer ${localStorage.token}` }
+          })
+            .then( obj => obj.json())
+            .then( res => {
+              if(!res.message){
+                commit('addUser', res);
+                resolve(true);
+              }else{
+                alert(res.message);
+                resolve(false);
+              }
+            });
+      });
+    },
+    
+    getReservations({ commit, state }) {
+      return new Promise( (resolve, reject) => {
+      fetch(`http://127.0.0.1:8200/reservations/forUser/${localStorage.id}`)
+        .then( obj => obj.json())
+        .then( res => {
+          if(!res.message){
+            commit('addReservations', res);
+            resolve(res);
+          }else{
+            alert(res.message);
+            resolve([]);
+          }
+        });
+      });
+    },
+
+    deleteReservation({ commit, state }, id) {
+      return new Promise( (resolve, reject) => {
+      fetch(`http://127.0.0.1:8200/reservations/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${localStorage.token}`},
+      })
+        .then( obj => obj.json())
+        .then( res => {
+          if(!res.message){
+            resolve([]);
+          }else{
+            alert(res.message);
+            resolve([]);
+          }
+        });
       });
     },
 
@@ -147,6 +212,49 @@ export default new Vuex.Store({
       fetch('http://127.0.0.1:8200/repertoire/ids')
       .then(obj => obj.json())
       .then(res => commit('addRepertoireIds', res));
+    },
+
+    
+    fetchRepertoireIdsQuery({commit}, query){
+      fetch(`http://127.0.0.1:8200/shows/query/${query}`)
+      .then(obj => obj.json())
+      .then(res => {
+        commit('addRepertoireIds', [])
+        res.forEach(e => {
+          fetch(`http://127.0.0.1:8200/repertoire/ids/${e}`)
+          .then(obj => obj.json())
+          .then(ress => commit('addMoreRepertoireIds', ress));
+        })
+      });
+    },
+
+    fetchRepertoireIdsForShow({commit}, id){
+      fetch(`http://127.0.0.1:8200/repertoire/ids/${id}`)
+      .then(obj => obj.json())
+      .then(res => commit('addRepertoireIds', res));
+    },
+
+    
+    editUser({ commit }, obj) {
+      return new Promise( (resolve, reject) => {
+      fetch(`http://127.0.0.1:8200/users/${localStorage.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.token}` },
+        body: JSON.stringify(obj)
+      }).then( res => res.json() )
+        .then( tkn => {
+          if(tkn.message){
+            alert(tkn.message);
+            resolve(false);
+          }else{
+            commit('removeToken');
+            alert("Uspesno izmenjen profil. Ulogujte se")
+            resolve(true); 
+          }
+          }
+        );
+      });
     },
 
     register({ commit }, obj) {

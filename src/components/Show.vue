@@ -3,10 +3,8 @@
       <div v-if="gotData" @onclick="">
           <p :v-if="rep.show">{{rep.show.description}}</p>
           <img :src="image">
-          <p>Datum: {{rep.dateTime}}</p>
-          <p>Vreme: {{rep.time}}</p>
       </div>
-  
+      
     </div>
   </template>
   

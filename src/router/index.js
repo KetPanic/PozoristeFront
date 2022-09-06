@@ -7,6 +7,8 @@ import Shows from '@/views/Shows.vue';
 import Halls from '@/views/Halls.vue';
 import RepertoireEntry from '@/views/RepertoireEntry.vue';
 import ShowView from '@/views/ShowView.vue';
+import Profile from '@/views/Profile.vue';
+import ProfileEdit from '@/views/ProfileEdit.vue';
 
 Vue.use(VueRouter)
 
@@ -20,6 +22,16 @@ const routes = [
     path: '/predstave',
     name: 'Shows',
     component: Shows
+  },
+  {
+    path: '/profil',
+    name: 'Profile',
+    component: Profile
+  },
+  {
+    path: '/izmenaProfila',
+    name: 'ProfileEdit',
+    component: ProfileEdit
   },
   {
     path: '/predstava/:id',

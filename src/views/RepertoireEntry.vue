@@ -3,6 +3,8 @@
     <Header :subtitle="subtitle"/>
     <div v-if="gotData">
         <Show :rep="rep"></Show>
+          <p>Datum: {{rep.dateTime}}</p>
+          <p>Vreme: {{rep.time}}</p>
         <div :v-if="token">
         </div>
         <div v-if="token&&gotTickets">
@@ -30,11 +32,14 @@
               </b-form>  
             </div>
             <hr/>    
-           <Comments :id="rep.showId" /> 
         </div>
         <div v-else>
             Ulogujte se da biste rezervisali kartu
         </div>
+    </div>
+    <hr>
+    <div v-if="gotData">
+      <Comments :showId="rep.showId" /> 
     </div>
     <br/>
     <hr/>
@@ -152,7 +157,6 @@
         this.reserveTickets(o).then(r => {
             if(r){
               this.tickets.forEach(element => {
-                  alert(element)
                 if(element.id == o.ticketId){
                   element.number = element.number - o.noOfTickets;
                 }
